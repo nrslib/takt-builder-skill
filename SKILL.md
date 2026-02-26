@@ -80,13 +80,13 @@ $ARGUMENTS にユーザーの意図が入る。省略時は AskUserQuestion で�
 
 ### ファセット・ピースの出力先
 
-作成したファセットやピースYAMLの配置先は、プロジェクトに TAKT がインストールされているかで決まる。
+作成したファセットやピースYAMLの配置先は、cwd が TAKT プロジェクトかどうかで決まる。
 
-| 配置先 | 探索方法 | 用途 |
-|--------|---------|------|
-| `builtins/{lang}/` | Glob で `builtins/ja/STYLE_GUIDE.md` を探す | TAKT プロジェクト本体の開発 |
-| `~/.takt/` | ユーザーカスタム | eject 済み環境、個人のカスタムファセット |
-| `.takt/` | プロジェクトローカル | プロジェクト固有のファセット |
+| 配置先 | 条件 | 用途 |
+|--------|------|------|
+| `builtins/{lang}/` | cwd に `builtins/ja/STYLE_GUIDE.md` が存在する | TAKT プロジェクト本体の builtin 更新 |
+| `.takt/` | 上記以外（ユーザー選択） | プロジェクト固有のファセット・ピース |
+| `~/.takt/` | 上記以外（ユーザー選択） | eject 済み環境、個人のカスタムファセット |
 
 **出力先の決定手順:**
 1. cwd で `builtins/ja/STYLE_GUIDE.md` を Glob → 見つかれば TAKT プロジェクト内（`builtins/{lang}/` に出力）
