@@ -1,6 +1,6 @@
 # ai-review-standalone — AIレビュー（standalone）instruction テンプレート
 
-> **用途**: AI生成コードの専門レビュー（独立ムーブメントとして実行、iteration tracking 付き）
+> **用途**: AI生成コードの専門レビュー（独立ステップとして実行、iteration tracking 付き）
 > **使用エージェント**: ai-antipattern-reviewer
 > **parallel sub-step 用は `review.md` のバリエーションBを使用**
 
@@ -9,7 +9,7 @@
 ## テンプレート
 
 ```
-**これは {movement_iteration} 回目のAI Reviewです。**
+**これは {step_iteration} 回目のAI Reviewです。**
 
 初回は網羅的にレビューし、指摘すべき問題をすべて出し切ってください。
 2回目以降は、前回REJECTした項目が修正されたかの確認を優先してください。
@@ -27,11 +27,11 @@ AI特有の問題についてコードをレビューしてください:
 
 | | standalone | parallel sub-step |
 |--|-----------|-------------------|
-| iteration tracking | あり（`{movement_iteration}`） | なし |
+| iteration tracking | あり（`{step_iteration}`） | なし |
 | 初回/2回目の指示分岐 | あり | なし |
-| 次のムーブメント | ai_fix or reviewers | 親ムーブメントが決定 |
+| 次のステップ | ai_fix or reviewers | 親ステップが決定 |
 
-standalone は ai_review → ai_fix のループを形成するピース向け。
+standalone は ai_review → ai_fix のループを形成するワークフロー向け。
 parallel sub-step は review.md のバリエーションBを使う。
 
 ---

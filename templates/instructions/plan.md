@@ -32,11 +32,11 @@
 
 ### A. 標準計画（planner 使用）
 
-計画のみ。設計は architect ムーブメントに委譲。
+計画のみ。設計は architect ステップに委譲。
 
 ### B. 計画+設計（architect-planner 使用）
 
-architect ムーブメントを省略する軽量ピース向け。
+architect ステップを省略する軽量ワークフロー向け。
 planner の代わりに architect-planner を使い、計画内に設計判断を含める。
 不明点の自力解決指示を追加。
 

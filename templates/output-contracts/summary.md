@@ -1,6 +1,6 @@
 # summary — タスク完了サマリーレポートテンプレート
 
-> **用途**: supervise ムーブメントの Summary レポート（APPROVE の場合のみ出力）
+> **用途**: supervise ステップの Summary レポート（APPROVE の場合のみ出力）
 > **report 設定**: `Summary: summary.md`
 
 ---
@@ -24,7 +24,7 @@
 ## レビュー結果
 | レビュー | 結果 |
 |---------|------|
-{カスタマイズ: ピースのレビュー構成に応じてリスト変更}
+{カスタマイズ: ワークフローのレビュー構成に応じてリスト変更}
 | AI Review | APPROVE |
 | Architecture | APPROVE |
 | QA | APPROVE |
@@ -41,10 +41,10 @@ npm run build
 
 ## カスタマイズ箇所
 
-**レビュー結果テーブルのみ**ピースごとに変更する。
-他のセクションは全ピースで同一。
+**レビュー結果テーブルのみ**ワークフローごとに変更する。
+他のセクションは全ワークフローで同一。
 
-| ピース | レビュー一覧 |
+| ワークフロー | レビュー一覧 |
 |--------|------------|
 | minimal | AI Review, Supervisor |
 | coding | AI Review, Architecture |

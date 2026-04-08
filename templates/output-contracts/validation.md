@@ -1,6 +1,6 @@
 # validation — 最終検証レポートテンプレート
 
-> **用途**: supervise ムーブメントの Validation レポート
+> **用途**: supervise ステップの Validation レポート
 > **report 設定**: `Validation: supervisor-validation.md`
 
 ---

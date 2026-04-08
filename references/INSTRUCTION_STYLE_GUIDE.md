@@ -13,7 +13,7 @@
 | `implement.md` | 実装（コーディング + レポート埋め込み） |
 | `review.md` | レビュー（parallel sub-step 汎用） |
 | `ai-review-standalone.md` | AIレビュー（standalone、iteration tracking） |
-| `ai-fix.md` | AI指摘修正（全ピース共通） |
+| `ai-fix.md` | AI指摘修正（全ワークフロー共通） |
 | `fix.md` | レビュー指摘修正（汎用 fix / supervise fix） |
 | `arbitrate.md` | 裁定（レビュアー vs コーダー） |
 | `supervise.md` | 最終検証（レポート埋め込み） |
@@ -22,14 +22,14 @@
 
 ## インストラクションとは
 
-ピースのムーブメントで実行する具体的な手順。`instruction_template` フィールドに直接記述するか、ファイル参照で使用する。
+ワークフローのステップで実行する具体的な手順。`instruction_template` フィールドに直接記述するか、ファイル参照で使用する。
 
 | 項目 | 内容 |
 |------|------|
-| 目的 | ムーブメントの実行手順と出力要件の定義 |
+| 目的 | ステップの実行手順と出力要件の定義 |
 | 配置 | Phase 1 メッセージの `## Instructions`（`{{instructions}}`） |
-| 対象 | 1つのムーブメント |
-| 判断基準 | 「この手順は特定のムーブメント/ピースに固有か？」→ YES |
+| 対象 | 1つのステップ |
+| 判断基準 | 「この手順は特定のステップ/ワークフローに固有か？」→ YES |
 
 ### 実際の配置先
 
@@ -38,7 +38,7 @@
 ```
 ## 実行コンテキスト（作業ディレクトリ）
 ## 実行ルール（git commit禁止、cd禁止、edit権限）
-## Piece Context（ピース名、Iteration、Movement Iteration、Report Directory）
+## Piece Context（ワークフロー名、Iteration、Step Iteration、Report Directory）
 ## User Request（自動注入）
 ## Previous Response（自動注入、pass_previous_response: true 時）
 ## Additional User Inputs（自動注入）
@@ -46,7 +46,7 @@
 {{instructions}}  ← ★ インストラクションがここに展開される
 ```
 
-インストラクションの前に実行コンテキスト、ピース情報、ユーザーリクエスト、前回レスポンス等が既に提供されている。これらを再記述する必要はない。
+インストラクションの前に実行コンテキスト、ワークフロー情報、ユーザーリクエスト、前回レスポンス等が既に提供されている。これらを再記述する必要はない。
 
 ### ペルソナ・ポリシーとの分離
 
@@ -54,7 +54,7 @@
 この内容は…
 ├── エージェントの identity・専門知識 → ペルソナ
 ├── 複数エージェントの共有ルール → ポリシー
-└── ムーブメント固有の手順・出力形式 → インストラクション
+└── ステップ固有の手順・出力形式 → インストラクション
 ```
 
 ---
@@ -70,7 +70,7 @@
 | セクション | 内容 | デフォルト |
 |-----------|------|-----------|
 | `## User Request` | ユーザーの元リクエスト | **常に表示** |
-| `## Previous Response` | 前ムーブメントの出力 | **初回以外は常に表示**（`pass_previous_response` デフォルト: `true`） |
+| `## Previous Response` | 前ステップの出力 | **初回以外は常に表示**（`pass_previous_response` デフォルト: `true`） |
 | `## Additional User Inputs` | 蓄積されたユーザー入力 | **常に表示** |
 
 抑制したい場合は instruction_template 内にプレースホルダー（`{task}`, `{previous_response}`, `{user_inputs}`）を含めるか、`pass_previous_response: false` を設定する。通常は不要。
@@ -81,9 +81,9 @@ InstructionBuilder が instruction_template 内の `{変数名}` を展開する
 
 | 変数 | 内容 |
 |------|------|
-| `{iteration}` | ピース全体のイテレーション数 |
-| `{max_movements}` | 最大イテレーション数 |
-| `{movement_iteration}` | ムーブメント単位のイテレーション数 |
+| `{iteration}` | ワークフロー全体のイテレーション数 |
+| `{max_steps}` | 最大イテレーション数 |
+| `{step_iteration}` | ステップ単位のイテレーション数 |
 | `{report_dir}` | レポートディレクトリ名（`.takt/runs/{slug}/reports`） |
 | `{report:filename}` | 指定レポートの内容展開（ファイルが存在する場合） |
 | `{cycle_count}` | ループモニターで検出されたサイクル回数（`loop_monitors` 専用） |
@@ -119,7 +119,7 @@ InstructionBuilder が instruction_template 内の `{変数名}` を展開する
 テスト実行、ビルド確認、最終承認を行ってください。
 
 # 悪い例
-このムーブメントではタスクの分析を行います。  ← 説明文になっている
+このステップではタスクの分析を行います。  ← 説明文になっている
 ```
 
 ### 注意事項・条件
@@ -133,7 +133,7 @@ InstructionBuilder が instruction_template 内の `{変数名}` を展開する
 その内容を踏まえて計画を見直してください（replan）。
 
 # 良い例（イテレーション追跡）
-**これは {movement_iteration} 回目の AI Review です。**
+**これは {step_iteration} 回目の AI Review です。**
 2回目以降は、前回の修正が実際には行われていなかったということです。
 ```
 
@@ -198,7 +198,7 @@ InstructionBuilder が instruction_template 内の `{変数名}` を展開する
 | テンプレート変数を正しく使う | 自動注入される変数を手動で書く |
 | 出力契約は```markdownで囲む | プレーンテキストで出力契約を書く |
 | 必須出力の見出しを `##` で指定 | 出力形式を指定しない |
-| そのムーブメントの手順に集中 | ペルソナ（専門知識）の内容を混ぜる |
+| そのステップの手順に集中 | ペルソナ（専門知識）の内容を混ぜる |
 | `{report:filename}` でレポートを参照 | ファイルパスをハードコードする |
 
 ---
@@ -208,12 +208,12 @@ InstructionBuilder が instruction_template 内の `{変数名}` を展開する
 1. **ペルソナの内容**: エージェントの専門知識、検出手法、行動姿勢
 2. **ポリシーの内容**: DRY、Fail Fast 等の共有コーディング原則
 3. **自動注入される内容**: `{task}`, `{previous_response}` のプレースホルダーを明示的に書かない（エンジンが自動付加する）
-4. **他のムーブメント名の直接参照**: 「implement ムーブメントに戻る」等（ルーティングはルール定義の責務）
-5. **ピース固有のルーティング**: 「APPROVE なら次へ」等（ルール条件の責務）
+4. **他のステップ名の直接参照**: 「implement ステップに戻る」等（ルーティングはルール定義の責務）
+5. **ワークフロー固有のルーティング**: 「APPROVE なら次へ」等（ルール条件の責務）
 
 ### 例外: レポート参照
 
-`{report:filename}` を使ったレポート内容の展開は許容する。これはピース固有の概念だが、インストラクションの中核機能。
+`{report:filename}` を使ったレポート内容の展開は許容する。これはワークフロー固有の概念だが、インストラクションの中核機能。
 
 ```markdown
 # 許容
@@ -302,4 +302,4 @@ InstructionBuilder が instruction_template 内の `{変数名}` を展開する
 - [ ] 出力契約埋め込みが```markdownで囲まれているか
 - [ ] 必須出力の見出しが `##` で指定されているか
 - [ ] ファイルパスがハードコードされていないか（`{report:filename}` を使う）
-- [ ] そのムーブメントの手順に集中しているか（ルーティング指示なし）
+- [ ] そのステップの手順に集中しているか（ルーティング指示なし）

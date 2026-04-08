@@ -1,6 +1,6 @@
 # architecture-design — アーキテクチャ設計レポートテンプレート
 
-> **用途**: architect ムーブメントの出力レポート
+> **用途**: architect ステップの出力レポート
 > **report 設定**: `name: architecture.md`
 
 ---
